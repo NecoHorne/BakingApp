@@ -1,6 +1,9 @@
 package com.necohorne.bakingapp.Models;
 
-public class Ingredients {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Ingredients implements Parcelable {
 
     public long quantity;
     public String measure;
@@ -8,6 +11,24 @@ public class Ingredients {
 
     public Ingredients() {
     }
+
+    protected Ingredients(Parcel in) {
+        quantity = in.readLong();
+        measure = in.readString();
+        ingredient = in.readString();
+    }
+
+    public static final Creator<Ingredients> CREATOR = new Creator<Ingredients>() {
+        @Override
+        public Ingredients createFromParcel(Parcel in) {
+            return new Ingredients(in);
+        }
+
+        @Override
+        public Ingredients[] newArray(int size) {
+            return new Ingredients[size];
+        }
+    };
 
     public long getQuantity() {
         return quantity;
@@ -40,5 +61,17 @@ public class Ingredients {
                 ", measure='" + measure + '\'' +
                 ", ingredient='" + ingredient + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(quantity);
+        dest.writeString(measure);
+        dest.writeString(ingredient);
     }
 }

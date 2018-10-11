@@ -35,7 +35,7 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
         Ingredients ingredients = mIngredientsList.get(position);
         holder.ingredient.setText(ingredients.getIngredient());
-        holder.quantity.setText((int) ingredients.getQuantity());
+        holder.quantity.setText(String.valueOf(ingredients.getQuantity()));
         holder.measurement.setText(ingredients.getMeasure());
 
     }

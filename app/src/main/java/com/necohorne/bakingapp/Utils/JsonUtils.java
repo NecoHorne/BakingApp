@@ -73,7 +73,7 @@ public class JsonUtils {
         for(int i = 0; i < stepsJSONArray.length() ; i++) {
             JSONObject stepJSON = stepsJSONArray.optJSONObject(i);
             Step step = new Step();
-            step.setId(stepJSON.optLong(Constants.ID));
+            step.setId(stepJSON.optInt(Constants.ID));
             step.setShortDescription(stepJSON.optString(Constants.SHORT_DESCR));
             step.setDescription(stepJSON.optString(Constants.DESCRIPTION));
             step.setVideoURL(stepJSON.optString(Constants.VIDEO_URL));

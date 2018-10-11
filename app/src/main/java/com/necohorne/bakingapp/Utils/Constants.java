@@ -17,6 +17,12 @@ public class Constants {
     public static final String THUMBNAIL_URL = "thumbnailURL";
     public static final String SERVINGS = "servings";
     public static final String IMAGE = "image";
+
     public static final String RECIPE = "recipe";
+    public static final String STEP = "step";
+    public static final String RECIPE_BUNDLE = "recipe_bundle";
+    public static final String STEP_BUNDLE = "step_bundle";
+
+    public static final String RECIPE_FRAGMENT = "recipe_fragment";
 
 }

@@ -1,6 +1,7 @@
 package com.necohorne.bakingapp.Utils.RecyclerAdapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,8 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.necohorne.bakingapp.Models.Recipe;
 import com.necohorne.bakingapp.Models.Step;
 import com.necohorne.bakingapp.R;
+import com.necohorne.bakingapp.UI.Activities.MenuActivity;
+import com.necohorne.bakingapp.UI.Fragments.RecipeDetailFragment;
+import com.necohorne.bakingapp.Utils.Constants;
 
 import java.util.ArrayList;
 
@@ -18,11 +23,12 @@ public class StepRecyclerAdapter extends RecyclerView.Adapter<StepRecyclerAdapte
 
     private final ArrayList<Step> mStepList;
     private final Context mContext;
+    private final Recipe mRecipe;
 
-    public StepRecyclerAdapter(ArrayList<Step> stepList, Context context) {
-
+    public StepRecyclerAdapter(ArrayList<Step> stepList, Context context, Recipe recipe) {
         mStepList = stepList;
         mContext = context;
+        mRecipe = recipe;
     }
 
     @NonNull
@@ -35,8 +41,28 @@ public class StepRecyclerAdapter extends RecyclerView.Adapter<StepRecyclerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull StepRecyclerAdapter.ViewHolder holder, int position) {
-        Step step = mStepList.get(position);
+        final Step step = mStepList.get(position);
         holder.mStepText.setText(step.getShortDescription());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(Constants.STEP, step);
+                bundle.putParcelable(Constants.RECIPE, mRecipe);
+
+                RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
+                recipeDetailFragment.setArguments(bundle);
+
+                android.support.v4.app.FragmentManager fragmentManager =((MenuActivity)mContext).getSupportFragmentManager();
+                if(fragmentManager != null) {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.menu_frame_layout, recipeDetailFragment)
+                            .addToBackStack(Constants.RECIPE_FRAGMENT)
+                            .commit();
+                }
+            }
+        });
     }
 
     @Override
@@ -50,7 +76,7 @@ public class StepRecyclerAdapter extends RecyclerView.Adapter<StepRecyclerAdapte
 
         public ViewHolder(View itemView) {
             super(itemView);
-            itemView.findViewById(R.id.list_recipe_step_tv);
+           mStepText = itemView.findViewById(R.id.list_recipe_step_tv);
         }
     }
 }

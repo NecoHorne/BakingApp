@@ -1,6 +1,7 @@
 package com.necohorne.bakingapp.Utils.RecyclerAdapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.necohorne.bakingapp.Models.Recipe;
 import com.necohorne.bakingapp.R;
+import com.necohorne.bakingapp.UI.Activities.MenuActivity;
 import com.necohorne.bakingapp.Utils.Constants;
 
 import java.util.ArrayList;
@@ -42,25 +44,28 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
         final Recipe recipe = mRecipeList.get(position);
 
         holder.mTitleText.setText(recipe.getName());
-        Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.bakeing_list_image);
 
+        Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.bakeing_list_image);
         int imageWidth = bitmap.getWidth();
         int imageHeight = bitmap.getHeight();
-
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-
         int newWidth = metrics.widthPixels;
         float scaleFactor = (float)newWidth/(float)imageWidth;
         int newHeight = (int)(imageHeight * scaleFactor);
-
         bitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+
         holder.mImageView.setImageBitmap(bitmap);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //create a bundle which will contain the parcelable recipe object which we can pass to an intent
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(Constants.RECIPE, recipe);
+                Intent intent = new Intent(mContext, MenuActivity.class);
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
             }
         });
 

@@ -22,8 +22,8 @@ public class Recipe implements Parcelable {
         name = in.readString();
         servings = in.readLong();
         image = in.readString();
-        this.ingredients = in.readArrayList(null);
-        this.steps = in.readArrayList(null);
+        this.ingredients = in.readArrayList(getClass().getClassLoader());
+        this.steps = in.readArrayList(getClass().getClassLoader());
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {

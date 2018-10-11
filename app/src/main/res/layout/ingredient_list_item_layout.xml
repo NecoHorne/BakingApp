@@ -39,7 +39,7 @@
 
                 <TextView
                     android:id="@+id/list_ingredient_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="TextView" />
@@ -64,7 +64,7 @@
 
                 <TextView
                     android:id="@+id/list_measure_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="TextView" />
@@ -89,7 +89,7 @@
 
                 <TextView
                     android:id="@+id/list_quantity_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="TextView" />
