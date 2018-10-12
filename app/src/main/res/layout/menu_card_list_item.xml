@@ -16,18 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="156dp"
-                android:layout_toStartOf="@+id/list_recipe_step_tv"
-                android:padding="5dp"
-                app:srcCompat="@drawable/ic_muffin" />
-
             <TextView
                 android:id="@+id/list_recipe_step_tv"
                 android:layout_width="wrap_content"

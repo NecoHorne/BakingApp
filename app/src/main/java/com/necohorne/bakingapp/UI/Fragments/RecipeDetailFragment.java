@@ -7,13 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -32,6 +33,7 @@ import com.necohorne.bakingapp.Models.Step;
 import com.necohorne.bakingapp.R;
 import com.necohorne.bakingapp.UI.Activities.MenuActivity;
 import com.necohorne.bakingapp.Utils.Constants;
+import com.squareup.picasso.Picasso;
 
 public class RecipeDetailFragment extends Fragment {
 
@@ -46,6 +48,8 @@ public class RecipeDetailFragment extends Fragment {
     private Recipe mRecipe;
     private int mCurrentIndex;
     private long mResumePosition;
+    private ImageView mImageView;
+    private ScrollView mScrollView;
 
     public RecipeDetailFragment() {
     }
@@ -79,14 +83,27 @@ public class RecipeDetailFragment extends Fragment {
         mPlayerView = rootView.findViewById(R.id.exoplayer_view);
         mDetailView = rootView.findViewById(R.id.step_detail_text_view);
         mDetailView.setText(mStep.getDescription());
+        mScrollView = rootView.findViewById(R.id.detail_scroll_view);
+
+        mImageView = rootView.findViewById(R.id.default_image_view);
         setUpNextButton(rootView);
 
         if(!mStep.getVideoURL().isEmpty()){
+            mPlayerView.setVisibility(View.VISIBLE);
             initPlayer(Uri.parse(mStep.getVideoURL()));
         }else {
-//            The below method does not want to work and i have no clue why
-//            mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource
-//                    (getResources(), R.mipmap.baking_image));
+           /*
+            The below method does not want to work and I have no clue why, I cant find if it was deprecated or not but
+            the method setDefaultArtwork does not exist, so I am using an ImageView for when there is no video.
+             */
+//            mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getResources(), R.mipmap.baking_image));
+
+            mPlayerView.setVisibility(View.GONE);
+            mImageView.setVisibility(View.VISIBLE);
+            Picasso.get()
+                    .load(Constants.DEFAULT_IMAGE_URL)
+                    .placeholder(R.drawable.ic_muffin)
+                    .into(mImageView);
         }
 
         return rootView;
@@ -110,6 +127,7 @@ public class RecipeDetailFragment extends Fragment {
             params.width= params.MATCH_PARENT;
             params.height= params.MATCH_PARENT;
             mPlayerView.setLayoutParams(params);
+            mScrollView.setVisibility(View.GONE);
             getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
             ((MenuActivity) getActivity()).getSupportActionBar().hide();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
@@ -117,6 +135,7 @@ public class RecipeDetailFragment extends Fragment {
             params.width=params.MATCH_CONSTRAINT;
             params.height=params.MATCH_CONSTRAINT;
             mPlayerView.setLayoutParams(params);
+            mScrollView.setVisibility(View.VISIBLE);
             getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             ((MenuActivity) getActivity()).getSupportActionBar().show();
         }
@@ -142,40 +161,51 @@ public class RecipeDetailFragment extends Fragment {
 
         mButton = rootView.findViewById(R.id.next_button);
 
-        mCurrentIndex = mStep.getId();
-        if(mRecipe != null){
-            if(mCurrentIndex == mRecipe.getSteps().size() - 1){
-                mButton.setVisibility(View.GONE);
-            }
+        //check screen dp. if tab size next button is redundant so hide it else show it.
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthDP = displayMetrics.widthPixels / (getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
 
-            mButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(mStep != null){
-                        if(mCurrentIndex < mRecipe.getSteps().size() - 1){
+        if(widthDP > 600){
+            mButton.setVisibility(View.GONE);
+        }else {
+            mButton.setVisibility(View.VISIBLE);
+            mCurrentIndex = mStep.getId();
+            if(mRecipe != null){
+                if(mCurrentIndex == mRecipe.getSteps().size() - 1){
+                    mButton.setVisibility(View.GONE);
+                }
 
-                            Step nextStep = mRecipe.getSteps().get(mCurrentIndex + 1);
+                mButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(mStep != null){
+                            if(mCurrentIndex < mRecipe.getSteps().size() - 1){
 
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable(Constants.STEP, nextStep);
-                            bundle.putParcelable(Constants.RECIPE, mRecipe);
+                                Step nextStep = mRecipe.getSteps().get(mCurrentIndex + 1);
 
-                            RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
-                            recipeDetailFragment.setArguments(bundle);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable(Constants.STEP, nextStep);
+                                bundle.putParcelable(Constants.RECIPE, mRecipe);
 
-                            android.support.v4.app.FragmentManager fragmentManager = ((MenuActivity)getContext()).getSupportFragmentManager();
-                            if(fragmentManager != null) {
-                                releasePlayer();
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.menu_frame_layout, recipeDetailFragment)
-                                        .addToBackStack(Constants.STEP_FRAGMENT)
-                                        .commit();
+                                RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
+                                recipeDetailFragment.setArguments(bundle);
+
+                                android.support.v4.app.FragmentManager fragmentManager = ((MenuActivity)getContext()).getSupportFragmentManager();
+                                if(fragmentManager != null) {
+                                    releasePlayer();
+                                    fragmentManager.beginTransaction()
+                                            .replace(R.id.menu_frame_layout, recipeDetailFragment)
+                                            .addToBackStack(Constants.STEP_FRAGMENT)
+                                            .commit();
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
         }
+
     }
 
     private void initPlayer(Uri uri){

@@ -3,6 +3,7 @@ package com.necohorne.bakingapp.Utils;
 public class Constants {
 
     public static final String RECIPE_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+    public static final String DEFAULT_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/fir-intro-90f47.appspot.com/o/Baking_app%2Fnadya-spetnitskaya-544606-unsplash.jpg?alt=media&token=9bb00cf5-3861-4fe9-a63d-5fa4ea2ba329";
 
     public static final String ID = "id";
     public static final String NAME = "name";

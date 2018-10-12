@@ -3,8 +3,10 @@ package com.necohorne.bakingapp.UI.Activities;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 
 import com.necohorne.bakingapp.Models.Recipe;
 import com.necohorne.bakingapp.R;
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<Recipe> mRecipeList;
     public RecipeRecyclerAdapter mRecipeRecyclerAdapter;
 
+    //TODO Widget
+    //TODO UI test.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +42,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecycler() {
         mRecyclerView = findViewById(R.id.main_recycler_view);
-        LinearLayoutManager recipeLayoutManager = new LinearLayoutManager(MainActivity.this);
-        mRecyclerView.setLayoutManager(recipeLayoutManager);
+
+        //check for tab size if so use a grid layout manager
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthDP = displayMetrics.widthPixels / (getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+
+        if(widthDP > 600){
+            GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this, 3);
+            mRecyclerView.setLayoutManager(layoutManager);
+        }else {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+            mRecyclerView.setLayoutManager(layoutManager);
+        }
+
+
 
     }
 
