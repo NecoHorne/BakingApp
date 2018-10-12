@@ -15,9 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.necohorne.bakingapp.Models.Ingredients;
 import com.necohorne.bakingapp.Models.Recipe;
 import com.necohorne.bakingapp.R;
+import com.necohorne.bakingapp.UI.Activities.MenuActivity;
 import com.necohorne.bakingapp.Utils.Constants;
 import com.necohorne.bakingapp.Utils.RecyclerAdapters.StepRecyclerAdapter;
 
@@ -69,7 +69,6 @@ public class RecipeMenuFragment extends Fragment {
         if(mBundle != null){
             outState.putBundle(Constants.RECIPE_BUNDLE , mBundle);
         }
-
     }
 
     private void setRecycler(View rootView) {
@@ -108,10 +107,13 @@ public class RecipeMenuFragment extends Fragment {
                     bundle.putParcelable(Constants.RECIPE, mRecipe);
                     IngredientsDetailFragment ingredientsDetailFragment = new IngredientsDetailFragment();
                     ingredientsDetailFragment.setArguments(bundle);
-                    if(getFragmentManager() != null) {
-                        getFragmentManager().beginTransaction()
+
+                    android.support.v4.app.FragmentManager fragmentManager =((MenuActivity)getContext()).getSupportFragmentManager();
+
+                    if(fragmentManager != null) {
+                        fragmentManager.beginTransaction()
                                 .replace(R.id.menu_frame_layout, ingredientsDetailFragment)
-                                .addToBackStack(Constants.RECIPE_FRAGMENT)
+                                .addToBackStack(Constants.INGREDIENT_FRAGMENT)
                                 .commit();
                     }
                 }

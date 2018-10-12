@@ -24,5 +24,9 @@ public class Constants {
     public static final String STEP_BUNDLE = "step_bundle";
 
     public static final String RECIPE_FRAGMENT = "recipe_fragment";
+    public static final String INGREDIENT_FRAGMENT = "recipe_fragment";
+    public static final String STEP_FRAGMENT = "step_fragment";
+    public static final String CURRENT_FRAGMENT = "current_fragment";
+    public static final String CURRENT_POSITION = "current_position";
 
 }

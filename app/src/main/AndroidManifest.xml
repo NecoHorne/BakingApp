@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".UI.Activities.MenuActivity"
-            android:parentActivityName="UI.Activities.MainActivity"></activity>
+            android:parentActivityName="UI.Activities.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"></activity>
     </application>
 
 </manifest>
