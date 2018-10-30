@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".UI.Activities.MainActivity">
 
+    <ImageView
+        android:id="@+id/no_connection_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/no_connection"
+        android:contentDescription="@string/no_internet_image" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_recycler_view"
         android:layout_width="match_parent"

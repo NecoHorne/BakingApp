@@ -19,9 +19,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.Activities.MenuActivity"
-            android:parentActivityName="UI.Activities.MainActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"></activity>
+
+        <activity
+            android:name=".UI.Activities.MenuActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName="UI.Activities.MainActivity" />
+
+        <receiver android:name=".Widget.NewAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/new_app_widget_info" />
+        </receiver>
+
+        <service android:name=".Widget.WidgetIntentService"/>
     </application>
 
 </manifest>
