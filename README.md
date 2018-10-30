@@ -1,8 +1,7 @@
 # Udacity Android Developer Nanodegree
 
 ## Baking App Project
-
-Signed APK file located in:  
+ 
 Install on android device or emulator to run. 
 
 API key has been saved in properties.gradle which has not been committed. In order to run project enter your API key in the app gradle file in the API_KEY Variable in the buildConfigField method under defaultConfig .
