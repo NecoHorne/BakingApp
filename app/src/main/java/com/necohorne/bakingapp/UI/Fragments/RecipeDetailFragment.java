@@ -48,7 +48,6 @@ public class RecipeDetailFragment extends Fragment {
     private Recipe mRecipe;
     private int mCurrentIndex;
     private long mResumePosition;
-    private ImageView mImageView;
     private ScrollView mScrollView;
 
     public RecipeDetailFragment() {
@@ -85,7 +84,7 @@ public class RecipeDetailFragment extends Fragment {
         mDetailView.setText(mStep.getDescription());
         mScrollView = rootView.findViewById(R.id.detail_scroll_view);
 
-        mImageView = rootView.findViewById(R.id.default_image_view);
+        ImageView imageView = rootView.findViewById(R.id.default_image_view);
         setUpNextButton(rootView);
 
         if(!mStep.getVideoURL().isEmpty()){
@@ -99,11 +98,11 @@ public class RecipeDetailFragment extends Fragment {
 //            mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getResources(), R.mipmap.baking_image));
 
             mPlayerView.setVisibility(View.GONE);
-            mImageView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
             Picasso.get()
-                    .load(Constants.DEFAULT_IMAGE_URL)
+                    .load(mRecipe.getImage())
                     .placeholder(R.drawable.ic_muffin)
-                    .into(mImageView);
+                    .into(imageView);
         }
 
         return rootView;
@@ -144,11 +143,18 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (mPlayerView != null && mPlayerView.getPlayer() != null) {
-            mResumePosition = Math.max(0, mPlayerView.getPlayer().getCurrentPosition());
+        pausePlayer();
+//        if (mPlayerView != null && mPlayerView.getPlayer() != null) {
+//            mResumePosition = Math.max(0, mPlayerView.getPlayer().getCurrentPosition());
+//
+//            mPlayerView.getPlayer().release();
+//        }
+    }
 
-            mPlayerView.getPlayer().release();
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        startPlayer();
     }
 
     @Override
@@ -158,14 +164,11 @@ public class RecipeDetailFragment extends Fragment {
     }
 
     private void setUpNextButton(View rootView) {
-
         mButton = rootView.findViewById(R.id.next_button);
-
-        //check screen dp. if tab size next button is redundant so hide it else show it.
+        //check screen dp. if tab size, next button is redundant so hide it else show it.
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int widthDP = displayMetrics.widthPixels / (getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-
         if(widthDP > 600){
             mButton.setVisibility(View.GONE);
         }else {
@@ -175,22 +178,17 @@ public class RecipeDetailFragment extends Fragment {
                 if(mCurrentIndex == mRecipe.getSteps().size() - 1){
                     mButton.setVisibility(View.GONE);
                 }
-
                 mButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(mStep != null){
                             if(mCurrentIndex < mRecipe.getSteps().size() - 1){
-
                                 Step nextStep = mRecipe.getSteps().get(mCurrentIndex + 1);
-
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable(Constants.STEP, nextStep);
                                 bundle.putParcelable(Constants.RECIPE, mRecipe);
-
                                 RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
                                 recipeDetailFragment.setArguments(bundle);
-
                                 android.support.v4.app.FragmentManager fragmentManager = ((MenuActivity)getContext()).getSupportFragmentManager();
                                 if(fragmentManager != null) {
                                     releasePlayer();
@@ -222,6 +220,16 @@ public class RecipeDetailFragment extends Fragment {
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         }
+    }
+
+    private void pausePlayer(){
+        mExoPlayer.setPlayWhenReady(false);
+        mExoPlayer.getPlaybackState();
+    }
+
+    private void startPlayer(){
+        mExoPlayer.setPlayWhenReady(true);
+        mExoPlayer.getPlaybackState();
     }
 
     private void releasePlayer() {

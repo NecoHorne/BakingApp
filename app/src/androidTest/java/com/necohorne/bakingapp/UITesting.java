@@ -15,6 +15,8 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
@@ -37,7 +39,8 @@ public class UITesting {
     @Test
     public void idlingResourceTest() {
         onView(withId(R.id.main_recycler_view)).perform(click());
-        onView(withId(R.id.ingredients_card_view)).perform(click());
+        onView(withId(R.id.recipe_menu_recycler_view)).perform(click());
+        onView(withId(R.id.step_detail_text_view)).check(matches(isDisplayed()));
     }
 
     @After
